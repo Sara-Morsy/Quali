@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Load data
 @st.cache_data
 def load_data():
-    return pd.read_csv("Final_dt.csv")  # replace with your file
+    return pd.read_csv("Dashboard.csv")  # replace with your file
 df = load_data()
 
 # App title
