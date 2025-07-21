@@ -1,20 +1,21 @@
 import streamlit as st
 import pandas as pd
 
-# Load data
+# Load data from GitHub raw URL
 @st.cache_data
 def load_data():
-    return pd.read_csv("/mnt/data/Dashboard.csv")  # Path to uploaded CSV
+    url = "https://raw.githubusercontent.com/Sara-Morsy/Quali/main/Dashboard.csv"
+    return pd.read_csv(url)
 
 df = load_data()
 
 # App title
 st.title("Explore Qualitative Research in Clinical Trials")
 
-# --- Search Bar Only ---
+# --- Search Bar ---
 search_id = st.text_input("Search by ID (partial or full match):").strip().lower()
 
-# --- Filtered Data Based on Search ---
+# --- Filtered Results ---
 filtered_df = df.copy()
 if "ID" in df.columns and search_id:
     filtered_df = filtered_df[filtered_df["ID"].astype(str).str.lower().str.contains(search_id)]
@@ -23,7 +24,6 @@ if "ID" in df.columns and search_id:
 st.subheader("Search Results")
 
 if not filtered_df.empty:
-    # Add clickable hyperlinks for ID
     def make_clickable(id_val):
         return f'<a href="?selected_id={id_val}">{id_val}</a>'
 
@@ -31,7 +31,6 @@ if not filtered_df.empty:
     if "ID" in table_display.columns:
         table_display["ID"] = table_display["ID"].apply(make_clickable)
 
-    # Show as HTML table with clickable links
     st.markdown(table_display.to_html(escape=False, index=False), unsafe_allow_html=True)
 else:
     st.info("No data found for the search term.")
